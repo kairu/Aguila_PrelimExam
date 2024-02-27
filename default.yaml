@@ -1,0 +1,45 @@
+---
+- name: Install Python3 and Pip
+  hosts: vms
+  become: true
+ 
+
+  tasks:
+    - name: Install Python3
+      apt:
+        name: python3
+        update_cache: yes
+        state: present
+
+    - name: Install pip
+      apt:
+        name: python-pip
+        update_cache: yes
+        state: present
+
+    - name: Install OpenJDK
+      package:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Create User
+      user:
+        name: "{{ config.username }}"
+        state: present
+
+    - name: Create MOTD
+      template:
+        src: motd.j2
+        dest: /etc/motd
+      vars:
+        motd_text: "{{ config.motd | default('Ansible managed node by aguila')}}"
+
+    - name: Set pip3 as default pip
+      alternatives:
+        name: pip3
+        path: /usr/bin/pip3
+
+    - name: Set python3 as default python
+      alternatives:
+        name: python3
+        path: /usr/bin/python3

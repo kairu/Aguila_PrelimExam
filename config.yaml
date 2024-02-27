@@ -1,0 +1,4 @@
+---
+config:
+  motd: "Welcome to Ansible Managed Node"
+  username: "Aguila"
